@@ -1,0 +1,21 @@
+included:
+  - CryptoTracker
+
+opt_in_rules:
+  - closure_end_indentation
+  - closure_spacing
+  - force_cast
+  - force_try
+  - force_unwrapping
+
+disabled_rules:
+  - identifier_name
+
+line_length: 
+  warning: 150
+  ignores_comments: true
+
+nesting:
+  type_level:
+    warning: 2
+    error: 3
