@@ -67,7 +67,7 @@ private extension Coin {
     }
 }
 
-private extension Coin {
+extension Coin {
 
     func updateHoldings(amount: Double) -> Coin {
         return Coin(id: id,
