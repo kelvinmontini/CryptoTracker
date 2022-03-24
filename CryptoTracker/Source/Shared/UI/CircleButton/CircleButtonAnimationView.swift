@@ -1,7 +1,6 @@
 import SwiftUI
 
 struct CircleButtonAnimationView: View {
-
     @Binding var animate: Bool
 
     var body: some View {

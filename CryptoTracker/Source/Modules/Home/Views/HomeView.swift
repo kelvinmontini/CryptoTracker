@@ -1,7 +1,6 @@
 import SwiftUI
 
 struct HomeView: View {
-
     @State private var showPortfolio: Bool = false
 
     var body: some View {
@@ -19,7 +18,6 @@ struct HomeView: View {
 }
 
 private extension HomeView {
-
     private var homeHeader: some View {
         HStack {
             CircleButtonView(iconName: showPortfolio ? "plus" : "info")
@@ -53,12 +51,12 @@ private extension HomeView {
 }
 
 #if DEBUG
-struct HomeView_Previews: PreviewProvider {
-    static var previews: some View {
-        NavigationView {
-            HomeView()
-                .navigationBarHidden(true)
+    struct HomeView_Previews: PreviewProvider {
+        static var previews: some View {
+            NavigationView {
+                HomeView()
+                    .navigationBarHidden(true)
+            }
         }
     }
-}
 #endif

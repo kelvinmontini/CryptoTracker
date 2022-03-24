@@ -1,7 +1,6 @@
 import SwiftUI
 
 struct CoinRowView: View {
-
     let coin: Coin
     let showHoldingsColumn: Bool
 
@@ -22,7 +21,6 @@ struct CoinRowView: View {
 }
 
 private extension CoinRowView {
-
     private var leftColumn: some View {
         HStack(spacing: 0) {
             Text("\(coin.rank)")
@@ -59,7 +57,7 @@ private extension CoinRowView {
             Text(coin.priceChangePercentage24H?.asPercentString() ?? "")
                 .foregroundColor(
                     (coin.priceChangePercentage24H ?? 0) >= 0 ?
-                    Color.theme.green : Color.theme.red
+                        Color.theme.green : Color.theme.red
                 )
         }
         .frame(width: UIScreen.main.bounds.width / 3.5, alignment: .trailing)
@@ -67,27 +65,27 @@ private extension CoinRowView {
 }
 
 #if DEBUG
-struct CoinRowView_Previews: PreviewProvider {
-    static var previews: some View {
-        Group {
-            CoinRowView(coin: dev.coin, showHoldingsColumn: false)
-                .previewLayout(.sizeThatFits)
-                .padding()
+    struct CoinRowView_Previews: PreviewProvider {
+        static var previews: some View {
+            Group {
+                CoinRowView(coin: dev.coin, showHoldingsColumn: false)
+                    .previewLayout(.sizeThatFits)
+                    .padding()
 
-            CoinRowView(coin: dev.coin, showHoldingsColumn: false)
-                .previewLayout(.sizeThatFits)
-                .preferredColorScheme(.dark)
-                .padding()
+                CoinRowView(coin: dev.coin, showHoldingsColumn: false)
+                    .previewLayout(.sizeThatFits)
+                    .preferredColorScheme(.dark)
+                    .padding()
 
-            CoinRowView(coin: dev.coin, showHoldingsColumn: true)
-                .previewLayout(.sizeThatFits)
-                .padding()
+                CoinRowView(coin: dev.coin, showHoldingsColumn: true)
+                    .previewLayout(.sizeThatFits)
+                    .padding()
 
-            CoinRowView(coin: dev.coin, showHoldingsColumn: true)
-                .previewLayout(.sizeThatFits)
-                .preferredColorScheme(.dark)
-                .padding()
+                CoinRowView(coin: dev.coin, showHoldingsColumn: true)
+                    .previewLayout(.sizeThatFits)
+                    .preferredColorScheme(.dark)
+                    .padding()
+            }
         }
     }
-}
 #endif

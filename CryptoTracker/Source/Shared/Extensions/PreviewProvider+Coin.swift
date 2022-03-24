@@ -2,36 +2,34 @@ import Foundation
 import SwiftUI
 
 extension PreviewProvider {
-
     static var dev: DeveloperPreview {
         return DeveloperPreview.instance
     }
 }
 
 final class DeveloperPreview {
-
     static let instance = DeveloperPreview()
 
-    private init() { }
+    private init() {}
 
     let coin = Coin(id: "bitcoin",
                     symbol: "btc",
                     name: "Bitcoin",
                     image: "https://assets.coingecko.com/coins/images/1/large/bitcoin.png?1547033579",
                     currentPrice: 42156,
-                    marketCap: 800828208519,
+                    marketCap: 800_828_208_519,
                     marketCapRank: 1,
-                    fullyDilutedValuation: 885536663870,
-                    totalVolume: 28884750400,
+                    fullyDilutedValuation: 885_536_663_870,
+                    totalVolume: 28_884_750_400,
                     high24H: 43080,
                     low24H: 41111,
                     priceChange24H: 1044.61,
                     priceChangePercentage24H: 2.54096,
-                    marketCapChange24H: 20216166780,
+                    marketCapChange24H: 20_216_166_780,
                     marketCapChangePercentage24H: 2.58978,
-                    circulatingSupply: 18991187,
-                    totalSupply: 21000000,
-                    maxSupply: 21000000,
+                    circulatingSupply: 18_991_187,
+                    totalSupply: 21_000_000,
+                    maxSupply: 21_000_000,
                     ath: 69045,
                     athChangePercentage: -38.92599,
                     athDate: "2021-11-10T14:24:11.849Z",
@@ -207,7 +205,7 @@ final class DeveloperPreview {
                         42393.01082195025,
                         42572.414282050864,
                         42814.06593377567,
-                        42540.24263943805
+                        42540.24263943805,
                     ]),
                     priceChangePercentage24HInCurrency: 2.5409554010577944,
                     currentHoldings: 1.5)
