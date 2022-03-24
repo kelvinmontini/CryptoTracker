@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct CircleButtonView: View {
+
     let iconName: String
 
     var body: some View {
@@ -20,7 +21,9 @@ struct CircleButtonView: View {
     }
 }
 
+#if DEBUG
 struct CircleButtonView_Previews: PreviewProvider {
+
     static var previews: some View {
         Group {
             CircleButtonView(iconName: "info")
@@ -32,3 +35,4 @@ struct CircleButtonView_Previews: PreviewProvider {
         }
     }
 }
+#endif

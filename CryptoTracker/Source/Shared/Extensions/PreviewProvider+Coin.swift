@@ -2,15 +2,19 @@ import Foundation
 import SwiftUI
 
 extension PreviewProvider {
+
     static var dev: DeveloperPreview {
         return DeveloperPreview.instance
     }
 }
 
 final class DeveloperPreview {
+
     static let instance = DeveloperPreview()
 
     private init() {}
+
+    let homeViewModel = HomeViewModel()
 
     let coin = Coin(id: "bitcoin",
                     symbol: "btc",
@@ -205,7 +209,7 @@ final class DeveloperPreview {
                         42393.01082195025,
                         42572.414282050864,
                         42814.06593377567,
-                        42540.24263943805,
+                        42540.24263943805
                     ]),
                     priceChangePercentage24HInCurrency: 2.5409554010577944,
                     currentHoldings: 1.5)

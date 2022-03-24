@@ -1,6 +1,7 @@
 import Foundation
 
 extension Double {
+
     /// Converts a Double into a Currency with 2 decimal places
     /// ```
     /// Convert 1234.56 to $1,234.56

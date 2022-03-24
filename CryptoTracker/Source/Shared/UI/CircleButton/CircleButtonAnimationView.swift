@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct CircleButtonAnimationView: View {
+
     @Binding var animate: Bool
 
     var body: some View {
@@ -12,10 +13,13 @@ struct CircleButtonAnimationView: View {
     }
 }
 
+#if DEBUG
 struct CircleButtonAnimationView_Previews: PreviewProvider {
+
     static var previews: some View {
         CircleButtonAnimationView(animate: .constant(false))
             .foregroundColor(.red)
             .frame(width: 100, height: 100)
     }
 }
+#endif

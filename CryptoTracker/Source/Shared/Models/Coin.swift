@@ -36,6 +36,7 @@ struct Coin: Identifiable, Codable {
 }
 
 private extension Coin {
+
     enum CodingKeys: String, CodingKey {
         case id, symbol, name, image
         case currentPrice = "current_price"
@@ -66,6 +67,7 @@ private extension Coin {
 }
 
 extension Coin {
+
     func updateHoldings(amount: Double) -> Coin {
         return Coin(id: id,
                     symbol: symbol,
