@@ -1,6 +1,8 @@
 import SwiftUI
 
 struct HomeView: View {
+
+    @EnvironmentObject private var viewModel: HomeViewModel
     @State private var showPortfolio: Bool = false
 
     var body: some View {
@@ -9,7 +11,21 @@ struct HomeView: View {
                 .ignoresSafeArea()
 
             VStack {
-                homeHeader
+                HomeHeaderView(showPortfolio: $showPortfolio)
+
+                if !showPortfolio {
+                    CoinListView(coins: viewModel.allCoins,
+                                 showPortfolio: showPortfolio,
+                                 showHoldingsColumn: false)
+                    .transition(.move(edge: .leading))
+                }
+
+                if showPortfolio {
+                    CoinListView(coins: viewModel.portfolioCoins,
+                                 showPortfolio: showPortfolio,
+                                 showHoldingsColumn: false)
+                    .transition(.move(edge: .trailing))
+                }
 
                 Spacer(minLength: 0)
             }
@@ -17,46 +33,14 @@ struct HomeView: View {
     }
 }
 
-private extension HomeView {
-    private var homeHeader: some View {
-        HStack {
-            CircleButtonView(iconName: showPortfolio ? "plus" : "info")
-                .animation(.none, value: showPortfolio)
-                .background(
-                    CircleButtonAnimationView(animate: $showPortfolio)
-                )
-
-            Spacer()
-
-            Text(showPortfolio ? "Portfolio" : "Live Prices")
-                .font(.headline)
-                .fontWeight(.bold)
-                .foregroundColor(Color.theme.accent)
-                .animation(.none, value: showPortfolio)
-
-            Spacer()
-
-            CircleButtonView(iconName: "chevron.right")
-                .rotationEffect(
-                    Angle(degrees: showPortfolio ? 180 : 0)
-                )
-                .onTapGesture {
-                    withAnimation(.spring()) {
-                        showPortfolio.toggle()
-                    }
-                }
+#if DEBUG
+struct HomeView_Previews: PreviewProvider {
+    static var previews: some View {
+        NavigationView {
+            HomeView()
+                .navigationBarHidden(true)
         }
-        .padding(.horizontal)
+        .environmentObject(dev.homeViewModel)
     }
 }
-
-#if DEBUG
-    struct HomeView_Previews: PreviewProvider {
-        static var previews: some View {
-            NavigationView {
-                HomeView()
-                    .navigationBarHidden(true)
-            }
-        }
-    }
 #endif
