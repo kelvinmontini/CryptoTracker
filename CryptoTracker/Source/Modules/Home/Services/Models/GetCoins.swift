@@ -1,6 +1,6 @@
 import Foundation
 
-struct GetCoins: Request {
+struct GetCoins: NetworkRequest {
     typealias ReturnType = [Coin]
 
     var path: String = "/api/v3/coins/markets"

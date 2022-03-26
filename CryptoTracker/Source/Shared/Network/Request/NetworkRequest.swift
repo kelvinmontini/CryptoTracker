@@ -8,7 +8,7 @@ enum HTTPMethod: String {
     case delete = "DELETE"
 }
 
-protocol Request {
+protocol NetworkRequest {
     associatedtype ReturnType: Codable
 
     var path: String { get }
@@ -19,7 +19,7 @@ protocol Request {
     var headers: [String: String]? { get }
 }
 
-extension Request {
+extension NetworkRequest {
     var method: HTTPMethod { .get }
     var contentType: String { "application/json" }
     var queryParams: [String: String]? { nil }
@@ -27,7 +27,7 @@ extension Request {
     var headers: [String: String]? { nil }
 }
 
-extension Request {
+extension NetworkRequest {
 
     private func requestBodyFrom(params: [String: Any]?) -> Data? {
         guard let params = params else { return nil }
