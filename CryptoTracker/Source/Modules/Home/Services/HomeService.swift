@@ -7,7 +7,11 @@ final class HomeService {
 
     var coinSubscription: AnyCancellable?
 
-    init() {
+    private var networkingManager: NetworkingManagerProtocol
+
+    init(networkingManager: NetworkingManagerProtocol = NetworkingManager()) {
+        self.networkingManager = networkingManager
+
         getCoins()
     }
 
@@ -19,30 +23,13 @@ final class HomeService {
 
         guard let url = URL(string: baseURL + path + query) else { return }
 
-        coinSubscription = URLSession.shared.dataTaskPublisher(for: url)
-            .subscribe(on: DispatchQueue.global(qos: .default))
-            .tryMap { output -> Data in
-
-                guard let response = output.response as? HTTPURLResponse,
-                      response.statusCode >= 200 && response.statusCode < 300 else {
-                    throw URLError(.badServerResponse)
-                }
-
-                return output.data
-            }
-            .receive(on: DispatchQueue.main)
+        coinSubscription = networkingManager.request(url: url)
             .decode(type: [Coin].self, decoder: JSONDecoder())
-            .sink { completion in
+            .sink(receiveCompletion: networkingManager.handleCompletion,
+                  receiveValue: { [weak self] returnedCoins in
 
-                switch completion {
-                case .finished:
-                    break
-                case .failure(let error):
-                    print(error.localizedDescription)
-                }
-            } receiveValue: { [weak self] returnedCoins in
                 self?.allCoins = returnedCoins
                 self?.coinSubscription?.cancel()
-            }
+            })
     }
 }
