@@ -26,15 +26,6 @@ struct NetworkDispatcher: NetworkDispatcherProtocol {
             .receive(on: DispatchQueue.main)
             .eraseToAnyPublisher()
     }
-
-    private func handleURLResponse(output: URLSession.DataTaskPublisher.Output) throws -> Data {
-        if let response = output.response as? HTTPURLResponse,
-           !(200...299).contains(response.statusCode) {
-            throw httpError(response.statusCode)
-        }
-
-        return output.data
-    }
 }
 
 extension NetworkDispatcher {
@@ -71,8 +62,20 @@ extension NetworkDispatcher {
         }
     }
 
+    /// Parses URLSession publisher output, validate HTTP status code and return proper ones
+    /// - Parameter output: URLSession.DataTaskPublisher.Output
+    /// - Returns: Valid Data or throw an error
+    private func handleURLResponse(output: URLSession.DataTaskPublisher.Output) throws -> Data {
+        if let response = output.response as? HTTPURLResponse,
+           !(200...299).contains(response.statusCode) {
+            throw httpError(response.statusCode)
+        }
+
+        return output.data
+    }
+
     /// Parses URLSession publisher errors and return proper ones
-    /// - Parameter error: URLSession publisher error
+    /// - Parameter error: Error
     /// - Returns: Readable NetworkError
     private func handleError(_ error: Error) -> NetworkError {
         switch error {
