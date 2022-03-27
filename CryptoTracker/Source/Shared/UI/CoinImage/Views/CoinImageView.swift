@@ -4,8 +4,8 @@ struct CoinImageView: View {
 
     @StateObject var viewModel: CoinImageViewModel
 
-    init(url: String) {
-        let services: CoinImageServicesProtocol = CoinImageServices(url: url)
+    init(id: String, url: String) {
+        let services: CoinImageServicesProtocol = CoinImageServices(id: id, url: url)
         _viewModel = StateObject(wrappedValue: CoinImageViewModel(services: services))
     }
 
@@ -30,11 +30,11 @@ struct CoinImageView_Previews: PreviewProvider {
     static var previews: some View {
 
         Group {
-            CoinImageView(url: dev.coin.image)
+            CoinImageView(id: dev.coin.id, url: dev.coin.image)
                 .previewLayout(.sizeThatFits)
                 .padding()
 
-            CoinImageView(url: dev.coin.image)
+            CoinImageView(id: dev.coin.id, url: dev.coin.image)
                 .previewLayout(.sizeThatFits)
                 .preferredColorScheme(.dark)
                 .padding()

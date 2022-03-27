@@ -14,21 +14,48 @@ final class CoinImageServices: CoinImageServicesProtocol {
     var imagePublished: Published<UIImage?> { _image }
     var imagePublisher: Published<UIImage?>.Publisher { $image }
 
-    private var imageSubscription: AnyCancellable?
+    private let id: String
+    private let url: String
     private let networkClient: NetworkClientProtocol
+    private let localFileManager: LocalFileManagerProtocol
+    private let folderName = "coin_images"
+    private var imageSubscription: AnyCancellable?
 
-    init(url: String, networkClient: NetworkClientProtocol = NetworkClient()) {
+    init(id: String,
+         url: String,
+         networkClient: NetworkClientProtocol = NetworkClient(),
+         localFileManager: LocalFileManagerProtocol = LocalFileManager()) {
+
+        self.id = id
+        self.url = url
         self.networkClient = networkClient
+        self.localFileManager = localFileManager
 
-        getImage(url: url)
+        getCoinImage()
     }
 
-    private func getImage(url: String) {
+    private func getCoinImage() {
+
+        if let savedImage = localFileManager.loadImage(imageName: id, folderName: folderName) {
+            image = savedImage
+        } else {
+            getRemoteCoinImage(url: url)
+        }
+    }
+
+    private func getRemoteCoinImage(url: String) {
+
         imageSubscription = dispatchImageRequest(url: url)
             .sink(receiveCompletion: { _ in },
                   receiveValue: { [weak self] returnedImage in
-                self?.image = returnedImage
-                self?.imageSubscription?.cancel()
+                guard let self = self,
+                      let downloadedImage = returnedImage  else { return }
+
+                self.image = downloadedImage
+                self.imageSubscription?.cancel()
+                self.localFileManager.saveImage(image: downloadedImage,
+                                                imageName: self.id,
+                                                folderName: self.folderName)
             })
     }
 }
