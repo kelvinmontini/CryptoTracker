@@ -9,8 +9,6 @@ enum HTTPMethod: String {
 }
 
 protocol NetworkRequest {
-    associatedtype ReturnType: Decodable
-
     var baseURL: String { get }
     var path: String { get }
     var method: HTTPMethod { get }

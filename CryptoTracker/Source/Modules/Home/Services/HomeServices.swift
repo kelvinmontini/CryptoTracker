@@ -23,6 +23,20 @@ final class HomeServices: HomeServicesProtocol {
     }
 
     private func getCoins() {
+        coinSubscription = dispatchMarketsRequest()
+            .sink(receiveCompletion: { _ in },
+                  receiveValue: { [weak self] returnedCoins in
+                self?.allCoins = returnedCoins
+                self?.coinSubscription?.cancel()
+            })
+    }
+}
+
+// MARK: - HomeServices + NetworkClient
+
+extension HomeServices {
+
+    private func dispatchMarketsRequest() -> AnyPublisher<[Coin], NetworkError> {
 
         let queryParams = ["vs_currency": "usd",
                            "order": "market_cap_desc",
@@ -31,13 +45,6 @@ final class HomeServices: HomeServicesProtocol {
                            "sparkline": "true",
                            "price_change_percentage": "24h"]
 
-        let marketsRequest = MarketsRequest(queryParams: queryParams)
-
-        coinSubscription = networkClient.dispatch(request: marketsRequest)
-            .sink(receiveCompletion: { _ in },
-                  receiveValue: { [weak self] returnedCoins in
-                self?.allCoins = returnedCoins
-                self?.coinSubscription?.cancel()
-            })
+        return networkClient.dispatch(request: CoinGeckoAPI.markets(queryParams: queryParams))
     }
 }
