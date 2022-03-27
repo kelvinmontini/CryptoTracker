@@ -32,6 +32,7 @@ final class LocalFileManager: LocalFileManagerProtocol {
     /// Load an image to FileManager caches directory
     /// - Parameter imageName: Image name
     /// - Parameter folderName: Folder name
+    /// - Returns: An UIImage if file exists
     func loadImage(imageName: String, folderName: String) -> UIImage? {
 
         guard let url = getURLForImage(imageName: imageName, folderName: folderName),
