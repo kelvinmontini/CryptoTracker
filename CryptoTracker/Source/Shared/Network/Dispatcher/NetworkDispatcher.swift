@@ -1,9 +1,11 @@
 import Foundation
 import Combine
+import UIKit
 
 protocol NetworkDispatcherProtocol {
     var urlSession: URLSession { get }
     func dispatch<ReturnType: Decodable>(request: URLRequest) -> AnyPublisher<ReturnType, NetworkError>
+    func dispatchImage(request: URLRequest) -> AnyPublisher<UIImage?, NetworkError>
 }
 
 struct NetworkDispatcher: NetworkDispatcherProtocol {
@@ -23,6 +25,20 @@ struct NetworkDispatcher: NetworkDispatcherProtocol {
             .subscribe(on: DispatchQueue.global(qos: .default))
             .tryMap({ try handleURLResponse(output: $0) })
             .decode(type: ReturnType.self, decoder: JSONDecoder())
+            .mapError { handleError($0) }
+            .receive(on: DispatchQueue.main)
+            .eraseToAnyPublisher()
+    }
+
+    /// Dispatches an URLRequest and returns a Publisher
+    /// - Parameter request: URLRequest
+    /// - Returns: A publisher with the provided optional image or an error
+    func dispatchImage(request: URLRequest) -> AnyPublisher<UIImage?, NetworkError> {
+        return urlSession
+            .dataTaskPublisher(for: request)
+            .subscribe(on: DispatchQueue.global(qos: .default))
+            .tryMap({ try handleURLResponse(output: $0) })
+            .tryMap({ UIImage(data: $0) })
             .mapError { handleError($0) }
             .receive(on: DispatchQueue.main)
             .eraseToAnyPublisher()

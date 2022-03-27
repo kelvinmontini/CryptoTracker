@@ -24,7 +24,7 @@ enum HTTPMethod: String {
 
 protocol NetworkRequest {
     var baseURL: String { get }
-    var path: String { get }
+    var path: String? { get }
     var method: HTTPMethod { get }
     var contentType: HTTPContentType { get }
     var queryParams: HTTPParams? { get }
@@ -58,7 +58,7 @@ extension NetworkRequest {
     private func queryItemsFrom(params: HTTPParams?) -> [URLQueryItem]? {
         guard let params = params else { return nil }
         return params.map {
-            URLQueryItem(name: $0.key, value: $0.value as? String)
+            URLQueryItem(name: $0.key, value: "\($0.value)")
         }
     }
 
@@ -68,7 +68,11 @@ extension NetworkRequest {
     func asURLRequest(baseURL: String) -> URLRequest? {
 
         guard var urlComponents = URLComponents(string: baseURL) else { return nil }
-        urlComponents.path = "\(urlComponents.path)\(path)"
+
+        if let path = path {
+            urlComponents.path = "\(urlComponents.path)\(path)"
+        }
+
         urlComponents.queryItems = queryItemsFrom(params: queryParams)
         guard let finalURL = urlComponents.url else { return nil }
 

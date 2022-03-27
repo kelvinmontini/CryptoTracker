@@ -3,17 +3,27 @@ import Foundation
 enum CoinGeckoAPI {
 
     case markets(queryParams: HTTPParams?)
+    case image(url: String)
 }
 
 extension CoinGeckoAPI: NetworkRequest {
 
-    var baseURL: String { "https://api.coingecko.com" }
+    var baseURL: String {
+        switch self {
+        case .image(let url):
+            return url
+        default:
+            return "https://api.coingecko.com"
+        }
+    }
 
-    var path: String {
+    var path: String? {
         switch self {
 
         case .markets:
             return "/api/v3/coins/markets"
+        case .image:
+            return nil
         }
     }
 
@@ -22,6 +32,8 @@ extension CoinGeckoAPI: NetworkRequest {
 
         case .markets(let params):
             return params
+        default:
+            return nil
         }
     }
 }
