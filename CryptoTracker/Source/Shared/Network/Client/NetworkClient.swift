@@ -2,22 +2,15 @@ import Foundation
 import Combine
 
 protocol NetworkClientProtocol {
-
-    var baseURL: String { get }
     var networkDispatcher: NetworkDispatcherProtocol { get }
-
     func dispatch<R: NetworkRequest>(request: R) -> AnyPublisher<R.ReturnType, NetworkError>
 }
 
 struct NetworkClient: NetworkClientProtocol {
 
-    private(set) var baseURL: String
     private(set) var networkDispatcher: NetworkDispatcherProtocol
 
-    init(baseURL: String = "https://api.coingecko.com",
-         networkDispatcher: NetworkDispatcherProtocol = NetworkDispatcher()) {
-
-        self.baseURL = baseURL
+    init(networkDispatcher: NetworkDispatcherProtocol = NetworkDispatcher()) {
         self.networkDispatcher = networkDispatcher
     }
 
@@ -26,7 +19,7 @@ struct NetworkClient: NetworkClientProtocol {
     /// - Returns: A publisher containing decoded Data or an NetworkError
     func dispatch<R: NetworkRequest>(request: R) -> AnyPublisher<R.ReturnType, NetworkError> {
 
-        guard let urlRequest = request.asURLRequest(baseURL: baseURL) else {
+        guard let urlRequest = request.asURLRequest(baseURL: request.baseURL) else {
             return Fail(outputType: R.ReturnType.self, failure: NetworkError.badRequest).eraseToAnyPublisher()
         }
 

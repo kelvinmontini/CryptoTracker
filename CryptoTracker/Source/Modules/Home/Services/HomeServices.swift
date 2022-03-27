@@ -1,9 +1,17 @@
 import Foundation
 import Combine
 
-final class HomeServices {
+protocol HomeServicesProtocol {
+    var allCoins: [Coin] { get }
+    var allCoinsPublished: Published<[Coin]> { get }
+    var allCoinsPublisher: Published<[Coin]>.Publisher { get }
+}
 
-    @Published var allCoins: [Coin] = []
+final class HomeServices: HomeServicesProtocol {
+
+    @Published private(set) var allCoins: [Coin] = []
+    var allCoinsPublished: Published<[Coin]> { _allCoins }
+    var allCoinsPublisher: Published<[Coin]>.Publisher { $allCoins }
 
     private var coinSubscription: AnyCancellable?
     private let networkClient: NetworkClientProtocol
@@ -23,9 +31,9 @@ final class HomeServices {
                            "sparkline": "true",
                            "price_change_percentage": "24h"]
 
-        let requestModel = GetCoins(queryParams: queryParams)
+        let marketsRequest = MarketsRequest(queryParams: queryParams)
 
-        coinSubscription = networkClient.dispatch(request: requestModel)
+        coinSubscription = networkClient.dispatch(request: marketsRequest)
             .sink(receiveCompletion: { _ in },
                   receiveValue: { [weak self] returnedCoins in
                 self?.allCoins = returnedCoins

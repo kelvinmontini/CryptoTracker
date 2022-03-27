@@ -2,10 +2,8 @@ import Foundation
 import Combine
 
 protocol NetworkDispatcherProtocol {
-
     var urlSession: URLSession { get }
-
-    func dispatch<ReturnType: Codable>(request: URLRequest) -> AnyPublisher<ReturnType, NetworkError>
+    func dispatch<ReturnType: Decodable>(request: URLRequest) -> AnyPublisher<ReturnType, NetworkError>
 }
 
 struct NetworkDispatcher: NetworkDispatcherProtocol {
@@ -16,7 +14,7 @@ struct NetworkDispatcher: NetworkDispatcherProtocol {
         self.urlSession = urlSession
     }
 
-    func dispatch<ReturnType: Codable>(request: URLRequest) -> AnyPublisher<ReturnType, NetworkError> {
+    func dispatch<ReturnType: Decodable>(request: URLRequest) -> AnyPublisher<ReturnType, NetworkError> {
         return urlSession
             .dataTaskPublisher(for: request)
             .subscribe(on: DispatchQueue.global(qos: .default))
