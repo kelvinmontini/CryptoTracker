@@ -25,6 +25,7 @@ struct CoinImageView: View {
     }
 }
 
+#if DEBUG
 struct CoinImageView_Previews: PreviewProvider {
     static var previews: some View {
 
@@ -40,3 +41,4 @@ struct CoinImageView_Previews: PreviewProvider {
         }
     }
 }
+#endif

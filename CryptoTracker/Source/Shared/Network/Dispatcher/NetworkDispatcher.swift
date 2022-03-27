@@ -5,7 +5,7 @@ import UIKit
 protocol NetworkDispatcherProtocol {
     var urlSession: URLSession { get }
     func dispatch<ReturnType: Decodable>(request: URLRequest) -> AnyPublisher<ReturnType, NetworkError>
-    func dispatchImage(request: URLRequest) -> AnyPublisher<UIImage?, NetworkError>
+    func dispatch(request: URLRequest) -> AnyPublisher<UIImage?, NetworkError>
 }
 
 struct NetworkDispatcher: NetworkDispatcherProtocol {
@@ -32,8 +32,8 @@ struct NetworkDispatcher: NetworkDispatcherProtocol {
 
     /// Dispatches an URLRequest and returns a Publisher
     /// - Parameter request: URLRequest
-    /// - Returns: A publisher with the provided optional image or an error
-    func dispatchImage(request: URLRequest) -> AnyPublisher<UIImage?, NetworkError> {
+    /// - Returns: A publisher with the provided image or an error
+    func dispatch(request: URLRequest) -> AnyPublisher<UIImage?, NetworkError> {
         return urlSession
             .dataTaskPublisher(for: request)
             .subscribe(on: DispatchQueue.global(qos: .default))

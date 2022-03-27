@@ -38,6 +38,6 @@ final class CoinImageServices: CoinImageServicesProtocol {
 extension CoinImageServices {
 
     private func dispatchImageRequest(url: String) -> AnyPublisher<UIImage?, NetworkError> {
-        return networkClient.dispatchImage(request: CoinGeckoAPI.image(url: url))
+        return networkClient.dispatch(request: CoinGeckoAPI.image(url: url))
     }
 }

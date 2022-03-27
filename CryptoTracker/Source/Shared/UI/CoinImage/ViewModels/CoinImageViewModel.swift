@@ -5,7 +5,7 @@ import SwiftUI
 final class CoinImageViewModel: ObservableObject {
 
     @Published var image: UIImage?
-    @Published var isLoading: Bool = true
+    @Published var isLoading: Bool = false
 
     private let services: CoinImageServicesProtocol
     private var cancellables = Set<AnyCancellable>()

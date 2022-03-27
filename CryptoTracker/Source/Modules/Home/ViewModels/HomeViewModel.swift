@@ -7,7 +7,7 @@ final class HomeViewModel: ObservableObject {
     @Published var portfolioCoins: [Coin] = []
 
     private let services: HomeServicesProtocol
-    private var coinSubscription: AnyCancellable?
+    private var cancellables = Set<AnyCancellable>()
 
     init(services: HomeServicesProtocol = HomeServices()) {
         self.services = services
@@ -17,10 +17,10 @@ final class HomeViewModel: ObservableObject {
 
     func addSubscribers() {
 
-        coinSubscription = services.allCoinsPublisher
+        services.allCoinsPublisher
             .sink { [weak self] returnedCoins in
                 self?.allCoins = returnedCoins
-                self?.coinSubscription?.cancel()
             }
+            .store(in: &cancellables)
     }
 }
