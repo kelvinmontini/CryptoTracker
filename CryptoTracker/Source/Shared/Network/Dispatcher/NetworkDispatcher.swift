@@ -14,6 +14,9 @@ struct NetworkDispatcher: NetworkDispatcherProtocol {
         self.urlSession = urlSession
     }
 
+    /// Dispatches an URLRequest and returns a Publisher
+    /// - Parameter request: URLRequest
+    /// - Returns: A publisher with the provided decoded data or an error
     func dispatch<ReturnType: Decodable>(request: URLRequest) -> AnyPublisher<ReturnType, NetworkError> {
         return urlSession
             .dataTaskPublisher(for: request)
