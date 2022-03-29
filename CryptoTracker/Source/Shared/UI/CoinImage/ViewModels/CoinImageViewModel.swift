@@ -17,7 +17,7 @@ final class CoinImageViewModel: ObservableObject {
         isLoading = true
     }
 
-    func addSubscribers() {
+    private func addSubscribers() {
         services.imagePublisher
             .sink(receiveCompletion: { [weak self] _ in
                 self?.isLoading = false
