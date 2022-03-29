@@ -13,6 +13,8 @@ struct HomeView: View {
             VStack {
                 HomeHeaderView(showPortfolio: $showPortfolio)
 
+                SearchBarView(searchText: $viewModel.searchText)
+
                 if !showPortfolio {
                     CoinListView(coins: viewModel.allCoins,
                                  showPortfolio: showPortfolio,
