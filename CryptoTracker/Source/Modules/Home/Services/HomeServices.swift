@@ -14,10 +14,10 @@ final class HomeServices: HomeServicesProtocol {
     var allCoinsPublisher: Published<[Coin]>.Publisher { $allCoins }
 
     private var coinSubscription: AnyCancellable?
-    private let networkClient: NetworkClientProtocol
+    private let httpClient: HttpClientProtocol
 
-    init(networkClient: NetworkClientProtocol = NetworkClient()) {
-        self.networkClient = networkClient
+    init(httpClient: HttpClientProtocol = HttpClient()) {
+        self.httpClient = httpClient
 
         getCoins()
     }
@@ -32,19 +32,19 @@ final class HomeServices: HomeServicesProtocol {
     }
 }
 
-// MARK: - HomeServices + NetworkClient
+// MARK: - HomeServices + HttpClient
 
 extension HomeServices {
 
-    private func dispatchMarketsRequest() -> AnyPublisher<[Coin], NetworkError> {
+    private func dispatchMarketsRequest() -> AnyPublisher<[Coin], HttpError> {
 
-        let queryParams: HTTPParams = ["vs_currency": "usd",
+        let queryParams: HttpParams = ["vs_currency": "usd",
                                        "order": "market_cap_desc",
                                        "per_page": 250,
                                        "page": 1,
                                        "sparkline": true,
                                        "price_change_percentage": "24h"]
 
-        return networkClient.dispatch(request: CoinGeckoAPI.markets(queryParams: queryParams))
+        return httpClient.dispatch(request: CoinGeckoAPI.markets(queryParams: queryParams))
     }
 }

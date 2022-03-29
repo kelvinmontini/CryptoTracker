@@ -2,13 +2,14 @@ import Foundation
 import Combine
 import UIKit
 
-protocol NetworkDispatcherProtocol {
+protocol HttpDispatcherProtocol {
     var urlSession: URLSession { get }
-    func dispatch<ReturnType: Decodable>(request: URLRequest) -> AnyPublisher<ReturnType, NetworkError>
-    func dispatch(request: URLRequest) -> AnyPublisher<UIImage?, NetworkError>
+
+    func dispatch<ReturnType: Decodable>(request: URLRequest) -> AnyPublisher<ReturnType, HttpError>
+    func dispatch(request: URLRequest) -> AnyPublisher<UIImage?, HttpError>
 }
 
-struct NetworkDispatcher: NetworkDispatcherProtocol {
+struct HttpDispatcher: HttpDispatcherProtocol {
 
     private(set) var urlSession: URLSession
 
@@ -19,7 +20,7 @@ struct NetworkDispatcher: NetworkDispatcherProtocol {
     /// Dispatches an URLRequest and returns a Publisher
     /// - Parameter request: URLRequest
     /// - Returns: A publisher with the provided decoded data or an error
-    func dispatch<ReturnType: Decodable>(request: URLRequest) -> AnyPublisher<ReturnType, NetworkError> {
+    func dispatch<ReturnType: Decodable>(request: URLRequest) -> AnyPublisher<ReturnType, HttpError> {
         return urlSession
             .dataTaskPublisher(for: request)
             .subscribe(on: DispatchQueue.global(qos: .default))
@@ -33,7 +34,7 @@ struct NetworkDispatcher: NetworkDispatcherProtocol {
     /// Dispatches an URLRequest and returns a Publisher
     /// - Parameter request: URLRequest
     /// - Returns: A publisher with the provided image or an error
-    func dispatch(request: URLRequest) -> AnyPublisher<UIImage?, NetworkError> {
+    func dispatch(request: URLRequest) -> AnyPublisher<UIImage?, HttpError> {
         return urlSession
             .dataTaskPublisher(for: request)
             .subscribe(on: DispatchQueue.global(qos: .default))
@@ -45,12 +46,12 @@ struct NetworkDispatcher: NetworkDispatcherProtocol {
     }
 }
 
-extension NetworkDispatcher {
+extension HttpDispatcher {
 
     /// Parses a HTTP status code and returns a proper error
     /// - Parameter statusCode: HTTP status code
     /// - Returns: Mapped Error
-    private func httpError(_ statusCode: Int) -> NetworkError {
+    private func httpError(_ statusCode: Int) -> HttpError {
 
         switch statusCode {
         case 400:
@@ -93,8 +94,8 @@ extension NetworkDispatcher {
 
     /// Parses URLSession publisher errors and return proper ones
     /// - Parameter error: Error
-    /// - Returns: Readable NetworkError
-    private func handleError(_ error: Error) -> NetworkError {
+    /// - Returns: Readable HttpError
+    private func handleError(_ error: Error) -> HttpError {
         switch error {
         case is Swift.DecodingError:
             return .decodingError
@@ -102,7 +103,7 @@ extension NetworkDispatcher {
         case let urlError as URLError:
             return .urlSessionFailed(urlError)
 
-        case let error as NetworkError:
+        case let error as HttpError:
             return error
 
         default:

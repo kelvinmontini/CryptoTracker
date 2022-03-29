@@ -16,19 +16,19 @@ final class CoinImageServices: CoinImageServicesProtocol {
 
     private let id: String
     private let url: String
-    private let networkClient: NetworkClientProtocol
+    private let httpClient: HttpClientProtocol
     private let localFileManager: LocalFileManagerProtocol
     private let folderName = "coin_images"
     private var imageSubscription: AnyCancellable?
 
     init(id: String,
          url: String,
-         networkClient: NetworkClientProtocol = NetworkClient(),
+         httpClient: HttpClientProtocol = HttpClient(),
          localFileManager: LocalFileManagerProtocol = LocalFileManager()) {
 
         self.id = id
         self.url = url
-        self.networkClient = networkClient
+        self.httpClient = httpClient
         self.localFileManager = localFileManager
 
         getCoinImage()
@@ -60,11 +60,11 @@ final class CoinImageServices: CoinImageServicesProtocol {
     }
 }
 
-// MARK: - CoinImageServices + NetworkClient
+// MARK: - CoinImageServices + HttpClient
 
 extension CoinImageServices {
 
-    private func dispatchImageRequest(url: String) -> AnyPublisher<UIImage?, NetworkError> {
-        return networkClient.dispatch(request: CoinGeckoAPI.image(url: url))
+    private func dispatchImageRequest(url: String) -> AnyPublisher<UIImage?, HttpError> {
+        return httpClient.dispatch(request: CoinGeckoAPI.image(url: url))
     }
 }

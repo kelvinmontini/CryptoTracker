@@ -2,11 +2,11 @@ import Foundation
 
 enum CoinGeckoAPI {
 
-    case markets(queryParams: HTTPParams?)
+    case markets(queryParams: HttpParams?)
     case image(url: String)
 }
 
-extension CoinGeckoAPI: NetworkRequest {
+extension CoinGeckoAPI: HttpRequest {
 
     var baseURL: String {
         switch self {
@@ -27,7 +27,7 @@ extension CoinGeckoAPI: NetworkRequest {
         }
     }
 
-    var queryParams: HTTPParams? {
+    var queryParams: HttpParams? {
         switch self {
 
         case .markets(let params):
