@@ -13,6 +13,8 @@ struct HomeView: View {
             VStack {
                 HomeHeaderView(showPortfolio: $showPortfolio)
 
+                HomeStatisticsView(showPortfolio: $showPortfolio)
+
                 SearchBarView(searchText: $viewModel.searchText)
 
                 if !showPortfolio {
