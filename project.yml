@@ -1,0 +1,45 @@
+name: CryptoTracker
+
+options:
+  groupSortPosition: top
+
+targets:
+  CryptoTracker:
+    type: application
+    platform: iOS
+    deploymentTarget: "14.0"
+    sources: [CryptoTracker]
+    info:
+      path: CryptoTracker/Info.plist
+      properties:
+        CFBundleDevelopmentRegion: $(DEVELOPMENT_LANGUAGE)
+        CFBundleDisplayName: "Crypto Tracker"
+        CFBundleExecutable: $(EXECUTABLE_NAME)
+        CFBundleIdentifier: $(PRODUCT_BUNDLE_IDENTIFIER)
+        CFBundleInfoDictionaryVersion: "6.0"
+        CFBundleName: $(PRODUCT_NAME)
+        CFBundlePackageType: $(PRODUCT_BUNDLE_PACKAGE_TYPE)
+        CFBundleShortVersionString: "1.0"
+        CFBundleVersion: "1"
+        LSRequiresIPhoneOS: true
+        UISupportedInterfaceOrientations: 
+          - UIInterfaceOrientationPortrait
+        UIRequiredDeviceCapabilities: 
+          - armv7
+        UIApplicationSceneManifest:
+          UIApplicationSupportsMultipleScenes: true
+        UIApplicationSupportsIndirectInputEvents: true
+        UILaunchScreen:
+          UIColorName: systemBackgroundColor
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.kelvinmontini.CryptoTracker
+        TARGETED_DEVICE_FAMILY: 1
+    preBuildScripts:
+      - script: |
+                if which "${PODS_ROOT}/SwiftLint/swiftlint" >/dev/null; then
+                  "${PODS_ROOT}/SwiftLint/swiftlint"
+                else
+                  echo "warning: SwiftLint is not installed. Run 'pod install' to install it."
+                fi
+        name: Run Swiftlint

@@ -89,3 +89,9 @@ fastlane/test_output
 # https://github.com/johnno1962/injectionforxcode
 
 iOSInjectionProject/
+
+# Ignore project files as we generate them with xcodegen (https://github.com/yonaskolb/XcodeGen)
+*.pbxproj
+*.xcworkspace
+*.xcproj
+*.plist
