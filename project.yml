@@ -2,6 +2,7 @@ name: CryptoTracker
 
 options:
   groupSortPosition: top
+  postGenCommand: pod install
 
 targets:
   CryptoTracker:
