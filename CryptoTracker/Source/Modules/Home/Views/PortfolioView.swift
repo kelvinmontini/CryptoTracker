@@ -41,6 +41,9 @@ struct PortfolioView: View {
                 }
             }
         }
+        .onTapGesture {
+            UIApplication.shared.endEditing()
+        }
     }
 }
 
