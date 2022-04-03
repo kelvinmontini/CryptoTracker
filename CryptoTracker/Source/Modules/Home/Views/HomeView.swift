@@ -4,14 +4,20 @@ struct HomeView: View {
 
     @EnvironmentObject private var viewModel: HomeViewModel
     @State private var showPortfolio: Bool = false
+    @State private var showPortfolioView: Bool = false
 
     var body: some View {
         ZStack {
             Color.theme.background
                 .ignoresSafeArea()
+                .sheet(isPresented: $showPortfolioView) {
+                    PortfolioView()
+                        .environmentObject(viewModel)
+                }
 
             VStack {
-                HomeHeaderView(showPortfolio: $showPortfolio)
+                HomeHeaderView(showPortfolio: $showPortfolio,
+                               showPortfolioView: $showPortfolioView)
 
                 HomeStatisticsView(showPortfolio: $showPortfolio)
 

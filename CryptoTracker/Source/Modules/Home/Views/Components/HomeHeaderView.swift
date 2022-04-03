@@ -3,11 +3,17 @@ import SwiftUI
 struct HomeHeaderView: View {
 
     @Binding var showPortfolio: Bool
+    @Binding var showPortfolioView: Bool
 
     var body: some View {
         HStack {
             CircleButtonView(iconName: showPortfolio ? "plus" : "info")
                 .animation(.none, value: showPortfolio)
+                .onTapGesture {
+                    if showPortfolio {
+                        showPortfolioView.toggle()
+                    }
+                }
                 .background(
                     CircleButtonAnimationView(animate: $showPortfolio)
                 )
@@ -40,17 +46,21 @@ struct HomeHeaderView: View {
 struct HomeHeaderView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
-            HomeHeaderView(showPortfolio: .constant(false))
+            HomeHeaderView(showPortfolio: .constant(false),
+                           showPortfolioView: .constant(false))
                 .previewLayout(.sizeThatFits)
 
-            HomeHeaderView(showPortfolio: .constant(false))
+            HomeHeaderView(showPortfolio: .constant(false),
+                           showPortfolioView: .constant(false))
                 .previewLayout(.sizeThatFits)
                 .preferredColorScheme(.dark)
 
-            HomeHeaderView(showPortfolio: .constant(true))
+            HomeHeaderView(showPortfolio: .constant(true),
+                           showPortfolioView: .constant(false))
                 .previewLayout(.sizeThatFits)
 
-            HomeHeaderView(showPortfolio: .constant(true))
+            HomeHeaderView(showPortfolio: .constant(true),
+                           showPortfolioView: .constant(false))
                 .previewLayout(.sizeThatFits)
                 .preferredColorScheme(.dark)
         }
