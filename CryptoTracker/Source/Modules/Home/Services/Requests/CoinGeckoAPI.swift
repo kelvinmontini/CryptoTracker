@@ -2,8 +2,9 @@ import Foundation
 
 enum CoinGeckoAPI {
 
-    case markets(queryParams: HttpParams?)
     case image(url: String)
+    case global
+    case markets(queryParams: HttpParams?)
 }
 
 extension CoinGeckoAPI: HttpRequest {
@@ -20,10 +21,13 @@ extension CoinGeckoAPI: HttpRequest {
     var path: String? {
         switch self {
 
-        case .markets:
-            return "/api/v3/coins/markets"
         case .image:
             return nil
+        case .global:
+            return "/api/v3/global"
+        case .markets:
+            return "/api/v3/coins/markets"
+
         }
     }
 
