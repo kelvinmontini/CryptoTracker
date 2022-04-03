@@ -5,7 +5,7 @@ struct StatisticView: View {
     let statistic: Statistic
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 4) {
+        VStack(alignment: .center, spacing: 4) {
 
             let isPositivePercentage: Bool = (statistic.percentageChange ?? 0) >= 0
 
@@ -31,6 +31,7 @@ struct StatisticView: View {
             .foregroundColor(isPositivePercentage ? Color.theme.green : Color.theme.red)
             .opacity(statistic.percentageChange == nil ? 0.0 : 1.0)
         }
+        .padding(.horizontal)
     }
 }
 

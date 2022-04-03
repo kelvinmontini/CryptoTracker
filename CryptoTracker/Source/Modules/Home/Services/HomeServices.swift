@@ -1,34 +1,37 @@
 import Foundation
 import Combine
 
-protocol HomeServicesProtocol {
-    var allCoins: [Coin] { get }
-    var allCoinsPublished: Published<[Coin]> { get }
-    var allCoinsPublisher: Published<[Coin]>.Publisher { get }
-}
-
-final class HomeServices: HomeServicesProtocol {
+final class HomeServices {
 
     @Published private(set) var allCoins: [Coin] = []
-    var allCoinsPublished: Published<[Coin]> { _allCoins }
-    var allCoinsPublisher: Published<[Coin]>.Publisher { $allCoins }
+    @Published private(set) var globalMarketData: GlobalMarketData?
 
-    private var coinSubscription: AnyCancellable?
+    private var cancellables = Set<AnyCancellable>()
     private let httpClient: HttpClientProtocol
 
     init(httpClient: HttpClientProtocol = HttpClient()) {
         self.httpClient = httpClient
 
         getCoins()
+        getGlobalMarketData()
     }
 
     private func getCoins() {
-        coinSubscription = dispatchMarketsRequest()
+        dispatchMarketsRequest()
             .sink(receiveCompletion: { _ in },
                   receiveValue: { [weak self] returnedCoins in
                 self?.allCoins = returnedCoins
-                self?.coinSubscription?.cancel()
             })
+            .store(in: &cancellables)
+    }
+
+    private func getGlobalMarketData() {
+        dispatchGlobalMarketRequest()
+            .sink(receiveCompletion: { _ in },
+                  receiveValue: { [weak self] returnedGlobaldata in
+                self?.globalMarketData = returnedGlobaldata.data
+            })
+            .store(in: &cancellables)
     }
 }
 
@@ -46,5 +49,9 @@ extension HomeServices {
                                        "price_change_percentage": "24h"]
 
         return httpClient.dispatch(request: CoinGeckoAPI.markets(queryParams: queryParams))
+    }
+
+    private func dispatchGlobalMarketRequest() -> AnyPublisher<GlobalData, HttpError> {
+        return httpClient.dispatch(request: CoinGeckoAPI.global)
     }
 }
