@@ -2,8 +2,18 @@ import SwiftUI
 
 struct CoinLogoListView: View {
 
-    let coins: [Coin]
-    @Binding var selectedCoin: Coin?
+    private let coins: [Coin]
+    private let updateSelectedCoin: (_ coin: Coin) -> Void
+    @Binding private var selectedCoin: Coin?
+
+    init(coins: [Coin],
+         selectedCoin: Binding<Coin?>,
+         updateSelectedCoin: @escaping (_ coin: Coin) -> Void) {
+
+        self.coins = coins
+        self._selectedCoin = selectedCoin
+        self.updateSelectedCoin = updateSelectedCoin
+    }
 
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false) {
@@ -17,7 +27,7 @@ struct CoinLogoListView: View {
                         .padding(4)
                         .onTapGesture {
                             withAnimation(.easeIn) {
-                                selectedCoin = coin
+                                updateSelectedCoin(coin)
                             }
                         }
                         .background(
@@ -36,10 +46,10 @@ struct CoinLogoListView: View {
 struct CoinLogoListView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
-            CoinLogoListView(coins: [dev.coin], selectedCoin: .constant(nil))
+            CoinLogoListView(coins: [dev.coin], selectedCoin: .constant(nil)) { _ in }
                 .previewLayout(.sizeThatFits)
 
-            CoinLogoListView(coins: [dev.coin], selectedCoin: .constant(nil))
+            CoinLogoListView(coins: [dev.coin], selectedCoin: .constant(nil)) { _ in }
                 .previewLayout(.sizeThatFits)
                 .preferredColorScheme(.dark)
         }

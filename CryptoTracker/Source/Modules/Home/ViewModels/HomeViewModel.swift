@@ -8,12 +8,11 @@ final class HomeViewModel: ObservableObject {
     @Published var statistics: [Statistic] = []
     @Published var searchText: String = ""
 
-    private let services: HomeServices
+    private let services = HomeServices()
+    private let storeServices = PortfolioStoreServices()
     private var cancellables = Set<AnyCancellable>()
 
-    init(services: HomeServices = HomeServices()) {
-        self.services = services
-
+    init() {
         addSubscribers()
     }
 }
@@ -37,6 +36,26 @@ extension HomeViewModel {
                 self?.statistics = returnedStatistics
             }
             .store(in: &cancellables)
+
+        $allCoins
+            .combineLatest(storeServices.$savedEntities)
+            .map { (coins, entities) -> [Coin] in
+                coins
+                    .compactMap { coin in
+                        guard let entity = entities.first(where: { $0.coinID == coin.id }) else {
+                            return nil
+                        }
+                        return coin.updateHoldings(amount: entity.amount)
+                    }
+            }
+            .sink { [weak self] coins in
+                self?.portfolioCoins = coins
+            }
+            .store(in: &cancellables)
+    }
+
+    func updatePortfolio(coin: Coin, amount: Double) {
+        storeServices.updatePortfolio(coin: coin, amount: amount)
     }
 
     private func filterCoins(text: String, coins: [Coin]) -> [Coin] {

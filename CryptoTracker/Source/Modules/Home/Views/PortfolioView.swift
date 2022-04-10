@@ -12,13 +12,16 @@ struct PortfolioView: View {
     var body: some View {
 
         let showSaveButton = (selectedCoin != nil && selectedCoin?.currentHoldings != Double(quantityText))
+        let coinsList = viewModel.searchText.isEmpty ? viewModel.portfolioCoins : viewModel.allCoins
 
         NavigationView {
             ScrollView {
                 VStack(alignment: .leading, spacing: 0) {
                     SearchBarView(searchText: $viewModel.searchText)
 
-                    CoinLogoListView(coins: viewModel.allCoins, selectedCoin: $selectedCoin)
+                    CoinLogoListView(coins: coinsList,
+                                     selectedCoin: $selectedCoin,
+                                     updateSelectedCoin: updateSelectedCoin(coin:))
 
                     if selectedCoin != nil {
                         PortfolioInputSectionView(selectedCoin: selectedCoin,
@@ -51,6 +54,17 @@ struct PortfolioView: View {
 
 private extension PortfolioView {
 
+    func updateSelectedCoin(coin: Coin) {
+        selectedCoin = coin
+
+        if let portfolioCoin = viewModel.portfolioCoins.first(where: { $0.id == coin.id }),
+           let amount = portfolioCoin.currentHoldings {
+            quantityText = "\(amount)"
+        } else {
+            quantityText = ""
+        }
+    }
+
     private func cleanSelectedCoin() {
         selectedCoin = nil
         quantityText = ""
@@ -74,6 +88,11 @@ private extension PortfolioView {
     }
 
     private func didTappedSave() {
+
+        guard let coin = selectedCoin,
+              let amount = Double(quantityText) else { return }
+
+        viewModel.updatePortfolio(coin: coin, amount: amount)
 
         withAnimation(.easeIn) {
             showCheckmark = true

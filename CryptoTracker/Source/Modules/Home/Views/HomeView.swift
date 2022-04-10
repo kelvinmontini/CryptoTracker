@@ -33,7 +33,7 @@ struct HomeView: View {
                 if showPortfolio {
                     CoinListView(coins: viewModel.portfolioCoins,
                                  showPortfolio: showPortfolio,
-                                 showHoldingsColumn: false)
+                                 showHoldingsColumn: true)
                     .transition(.move(edge: .trailing))
                 }
 
