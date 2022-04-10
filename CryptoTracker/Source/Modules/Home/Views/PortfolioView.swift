@@ -41,6 +41,8 @@ struct PortfolioView: View {
                 }
             }
         }
+        .onChange(of: viewModel.searchText, perform: checkEmptySearchText)
+        .onReceive(viewModel.$allCoins, perform: checkEmptyCoins)
         .onTapGesture {
             UIApplication.shared.endEditing()
         }
@@ -49,13 +51,33 @@ struct PortfolioView: View {
 
 private extension PortfolioView {
 
+    private func cleanSelectedCoin() {
+        selectedCoin = nil
+        quantityText = ""
+    }
+
+    private func cleanPortfolioInputState() {
+        cleanSelectedCoin()
+        viewModel.searchText = ""
+    }
+
+    private func checkEmptySearchText(searchText: String) {
+        if searchText.isEmpty {
+            cleanPortfolioInputState()
+        }
+    }
+
+    private func checkEmptyCoins(coins: [Coin]) {
+        if coins.count == 0 {
+            cleanSelectedCoin()
+        }
+    }
+
     private func didTappedSave() {
 
         withAnimation(.easeIn) {
             showCheckmark = true
-            selectedCoin = nil
-            quantityText = ""
-            viewModel.searchText = ""
+            cleanPortfolioInputState()
         }
 
         UIApplication.shared.endEditing()
